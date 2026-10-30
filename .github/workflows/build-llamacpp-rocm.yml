@@ -151,15 +151,22 @@ jobs:
         $rocmVersion = "${{ env.ROCM_VERSION }}"
         $currentTarget = "${{ matrix.gfx_target }}"
 
-        # Add appropriate suffixes for different GPU targets
+        # Map specific GPU SKUs to their family S3 tarball prefix.
+        # TheRock only publishes family tarballs for RDNA2/3/4:
+        #   gfx103X -> gfx103X-dgpu
+        #   gfx110X -> gfx110X-all
+        #   gfx120X -> gfx120X-all
+        # Older CDNA/RDNA1 (gfx900, gfx908, gfx90a) and APUs (gfx1150, gfx1151)
+        # have their own per-target tarballs, so the name passes through unchanged.
         $s3Target = $currentTarget
-        if ($currentTarget -eq "gfx103X") {
-          $s3Target = "$currentTarget-dgpu"
-          Write-Host "Using S3 target with -dgpu suffix: $s3Target"
-        } elseif ($currentTarget -eq "gfx110X" -or $currentTarget -eq "gfx120X") {
-          $s3Target = "$currentTarget-all"
-          Write-Host "Using S3 target with -all suffix: $s3Target"
+        if ($currentTarget -match "^gfx103[0-9X]$") {
+          $s3Target = "gfx103X-dgpu"
+        } elseif ($currentTarget -match "^gfx110[0-9X]$") {
+          $s3Target = "gfx110X-all"
+        } elseif ($currentTarget -match "^gfx120[0-9X]$") {
+          $s3Target = "gfx120X-all"
         }
+        Write-Host "S3 target prefix: $s3Target (from input: $currentTarget)"
 
         if ($rocmVersion -eq "latest") {
           Write-Host "Auto-detecting latest ROCm version for target: $currentTarget"
