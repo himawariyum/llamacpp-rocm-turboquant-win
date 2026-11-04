@@ -31,8 +31,7 @@ on:
 
 env:
   GFX_TARGETS: ${{ github.event.inputs.gfx_target || 'gfx1151,gfx1150,gfx120X,gfx110X,gfx103X,gfx90a,gfx908,gfx900' }}
-  ROCM_VERSION: 7.12.0a20260223
-  #ROCM_VERSION: ${{ github.event.inputs.rocm_version || 'latest' }}
+  ROCM_VERSION: ${{ github.event.inputs.rocm_version || 'latest' }}
   LLAMACPP_VERSION: ${{ github.event.inputs.llamacpp_version || 'latest' }}
 
 jobs:
