@@ -291,16 +291,6 @@ jobs:
           -DGGML_NATIVE=OFF ^
           -DGGML_STATIC=OFF ^
           -DCMAKE_SYSTEM_NAME=Windows
-
-        Write-Host "========== KVarN BUILD DIAGNOSTICS =========="
-
-        Get-Content "CMakeCache.txt" |
-            Select-String "GGML_CUDA_KVARN|GGML_CUDA_FA:|GGML_CUDA_FA_ALL_QUANTS|GGML_HIP:|GGML_HIP_ROCWMMA_FATTN|GPU_TARGETS"
-        
-        Write-Host "========== KVarN SOURCE COMPILATION =========="
-        
-        ninja -t commands |
-            Select-String -Pattern "kvarn"
         
         cmake --build . -j %NUMBER_OF_PROCESSORS%
 
